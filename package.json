@@ -1,0 +1,25 @@
+{
+  "name": "reposy",
+  "version": "1.0.0",
+  "description": "Repository",
+  "type": "module",
+  "author": "Ilushling",
+  "license": "MIT",
+  "scripts": {
+    "test": "node --test"
+  },
+  "keywords": [
+    "repository"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ilushling/Repository.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Ilushling/Repository/issues"
+  },
+  "homepage": "https://github.com/Ilushling/Repository#readme",
+  "devDependencies": {
+    "@types/node": "^20.10.4"
+  }
+}
