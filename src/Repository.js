@@ -1,172 +1,60 @@
 /**
- * @typedef {string | number} Key
- */
-
-/**
- * @typedef {unknown | Model} Data
+ * @template {unknown} T
  * 
- * @typedef {object} Model
- * @property {() => Properties} getProperties
- * 
- * @typedef {Record<Key, unknown>} Properties
- */
-
-/**
- * @typedef {Record<Key, unknown> | Storage | Repository} Context
- * 
- * @typedef {object} Storage
- * @property {(key: Key) => unknown} get
- * @property {() => Promise<Record<Key, unknown>>} getAll
- * @property {(key: Key, data: StorageData) => any} set
- * @property {(key: Key) => Promise<boolean>} has
- * @property {(key: Key) => any} remove
- * @property {() => any} clear
- * 
- * @typedef {unknown} StorageData
- */
-
-/**
- * @typedef {object} ModelFactory
- * @property {(data: unknown) => unknown} create
- */
-
-/**
- * @typedef {object} RepositoryParams
- * @property {Context} context
- * @property {ModelFactory=} modelFactory
+ * @implements {IRepository}
  */
 export default class Repository {
-  /** @type {Storage} */
-  #storage;
+  /**
+   * @typedef {import('./IRepository.js').IRepository<T>} IRepository
+   */
 
-  /** @type {ModelFactory=} */
-  #modelFactory;
+  /**
+   * @typedef {import('./IRepository.js').RepositoryParams<T>} RepositoryParams
+   */
+
+  /**
+   * @typedef {import('./IRepository.js').RepositoryProperties<T>} RepositoryProperties
+   */
+
+  /** @type {RepositoryProperties['repository']} */
+  #repository;
 
   /** @param {RepositoryParams} params */
-  constructor({ context, modelFactory }) {
-    this.#storage = this.#createStorage(context);
-    this.#modelFactory = modelFactory;
+  constructor({ repository }) {
+    this.#repository = repository;
   }
 
-  #getStorage() {
-    return this.#storage;
-  }
-
-  /**
-   * @param {Context} context
-   */
-  setContext(context) {
-    const storage = this.#createStorage(context);
-
-    this.#storage = storage;
-  }
-
-  /**
-   * @param {Context} context
-   */
-  #createStorage(context) {
-    /** @type {Storage} */ let storage;
-
-    if (context instanceof Repository) {
-      storage = /** @type {Repository} */ (context);
-    } else if (
-      'get' in context
-      && 'getAll' in context
-      && 'set' in context
-      && 'has' in context
-      && 'remove' in context
-      && 'clear' in context
-    ) {
-      storage = /** @type {Storage} */ (context);
-    } else {
-      storage = {
-        get: async key => context[key],
-        getAll: async () => context,
-        set: async (key, data) => context[key] = data,
-        has: async key => key in context,
-        remove: async key => delete context[key],
-        clear: async () => {
-          for (const key in context) {
-            delete context[key];
-          }
-        }
-      };
-    }
-
-    return storage;
-  }
-
-  /**
-   * @param {Key} key
-   */
+  /** @type {IRepository['get']} */
   async get(key) {
-    const storage = this.#getStorage();
+    const repository = this.#repository;
 
-    const data = await storage.get(key);
-
-    const modelFactory = this.#modelFactory;
-    if (modelFactory == null) {
-      return data;
-    }
-
-    return modelFactory.create(data);
+    return repository.get(key);
   }
 
-  async getAll() {
-    const storage = this.#getStorage();
-
-    return storage.getAll();
-  }
-
-  /**
-   * @param {Key} key
-   */
+  /** @type {IRepository['has']} */
   async has(key) {
-    const storage = this.#getStorage();
+    const repository = this.#repository;
 
-    return storage.has(key);
+    return repository.has(key);
   }
 
-  /**
-   * @param {Key} key
-   * @param {Data} data
-   */
+  /** @type {IRepository['set']} */
   async set(key, data) {
-    const storage = this.#getStorage();
+    const repository = this.#repository;
 
-    data = this.#getData(data);
-
-    storage.set(key, data);
+    repository.set(key, data);
   }
 
-  /**
-   * @param {Key} key
-   */
+  /** @type {IRepository['remove']} */
   async remove(key) {
-    const storage = this.#getStorage();
+    const repository = this.#repository;
 
-    await storage.remove(key);
+    await repository.remove(key);
   }
 
   async clear() {
-    const storage = this.#getStorage();
+    const repository = this.#repository;
 
-    await storage.clear();
-  }
-
-  /**
-   * @param {Data} data
-   */
-  #getData(data) {
-    if (
-      data != null
-      && typeof data === 'object'
-      && 'getProperties' in data
-      && typeof data.getProperties === 'function'
-    ) {
-      return data.getProperties();
-    }
-
-    return data;
+    await repository.clear();
   }
 }

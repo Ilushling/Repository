@@ -1,73 +1,69 @@
 import assert from 'node:assert';
 import { describe, it } from 'node:test';
 
+import RepositoryFactory from '../src/Factory.js';
+
 import Repository from '../src/Repository.js';
+import KeyedRepository from '../src/KeyedRepository.js';
+import ModeledRepository from '../src/ModeledRepository.js';
+import ObjectedRepository from '../src/ObjectedRepository.js';
 
 /**
- * @typedef {import('../src/Repository.js').RepositoryParams} RepositoryParams
+ * @template {unknown} T
  * 
- * @typedef {import('../src/Repository.js').Context} Context
+ * @typedef {import('../src/IObjectedRepository.js').ObjectedRepositoryParams<T>} ObjectedRepositoryParams
  */
 
-/** @param {RepositoryParams} params */
-function createRepository({ context, modelFactory }) {
-  return new Repository({
-    context,
-    modelFactory
-  });
+const repositoryFactory = new RepositoryFactory({
+  Repository,
+  Keyed: KeyedRepository,
+  Modeled: ModeledRepository,
+  Objected: ObjectedRepository
+});
+
+/**
+ * @template {unknown} T
+ * 
+ * @param {ObjectedRepositoryParams<T>} params
+ */
+function createRepository({ object }) {
+  return repositoryFactory.createObjected(object);
 }
 
 describe('Repository', () => {
   it('get', async () => {
-    /** @type {Context} */
-    const context = {
+    const object = {
       1: 2
     };
 
-    const repository = createRepository({ context });
+    const repository = createRepository({ object });
 
     const data = await repository.get(1);
 
     assert.strictEqual(data, 2);
   });
 
-  it('getAll', async () => {
-    /** @type {Context} */
-    const context = {
-      1: 2
-    };
-
-    const repository = createRepository({ context });
-
-    const data = await repository.getAll();
-
-    assert.deepStrictEqual(data, {
-      1: 2
-    });
-  });
-
   it('set', async () => {
-    /** @type {Context} */
-    const context = {};
+    /** @type {Record<PropertyKey, unknown>} */
+    const object = {};
 
-    const repository = createRepository({ context });
+    const repository = createRepository({ object });
 
     await repository.set(1, 2);
     await repository.set('a', 'b');
 
-    assert.deepStrictEqual(context, {
+    assert.deepStrictEqual(object, {
       1: 2,
       a: 'b'
     });
   });
 
   it('has', async () => {
-    /** @type {Context} */
-    const context = {
+    const object = {
       1: 2
     };
 
-    const repository = createRepository({ context });
+    const repository = createRepository({ object });
 
     const has = await repository.has(1);
 
@@ -75,46 +71,28 @@ describe('Repository', () => {
   });
 
   it('remove', async () => {
-    /** @type {Context} */
-    const context = {
+    const object = {
       1: 2
     };
 
-    const repository = createRepository({ context });
+    const repository = createRepository({ object });
 
     await repository.remove(1);
 
-    assert.deepStrictEqual(context, {});
+    assert.deepStrictEqual(object, {});
   });
 
   it('clear', async () => {
-    /** @type {Context} */
-    const context = {};
+    /** @type {Record<PropertyKey, unknown>} */
+    const object = {};
 
-    const repository = createRepository({ context });
+    const repository = createRepository({ object });
 
     await repository.set(1, 2);
     await repository.set('a', 'b');
 
     await repository.clear();
 
-    assert.deepStrictEqual(context, {});
-  });
-
-  describe('Storage context', () => {
-    it('get', async () => {
-      /** @type {Context} */
-      const context = {
-        1: 2
-      };
-
-      const repository = createRepository({ context });
-
-      const subRepository = createRepository({ context: repository });
-
-      const data = await subRepository.get(1);
-
-      assert.strictEqual(data, 2);
-    });
+    assert.deepStrictEqual(object, {});
   });
 });
