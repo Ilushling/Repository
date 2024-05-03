@@ -1,5 +1,5 @@
 # Repository
-Repository
+Repository.
 
 - [Usage](#usage).
 
@@ -7,40 +7,47 @@ Repository
 1) [Prepare](#prepare);
 2) [Commands](#commands).
 
-
 ### Prepare
-1) [(Optional) Import types](#import-types);
-2) [Prepare context](#prepare-context);
-3) [Create repository](#create-repository).
+1) [Import types](#import-types);
+2) [Create repository](#create-repository).
 
 #### Import types
 ```js
 /**
- * @typedef {import('repository').Context} Context
+ * @template {unknown} T
+ * 
+ * @typedef {import('reposy').IRepository<T>} IRepository
  */
-```
-
-#### Prepare context
-```js
-/** @type {Context} */
-const context = {};
 ```
 
 #### Create repository
 ```js
-return new Repository({
-  context,
-  modelFactory
+import {
+  RepositoryFactory,
+
+  KeyedRepository,
+  ModeledRepository,
+  ObjectedRepository
+} from 'reposy';
+
+const repositoryFactory = new RepositoryFactory({
+  Keyed: KeyedRepository,
+  Modeled: ModeledRepository,
+  Objected: ObjectedRepository
 });
+
+/** @type {Record<PropertyKey, unknown>} */
+const object = {};
+
+const repository = repositoryFactory.createObjected(object);
 ```
 
 ### Commands
 1) [Get](#get);
 2) [Set](#set);
-3) [Get all](#get-all);
-4) [Has](#has);
-5) [Remove](#remove);
-6) [Clear](#clear).
+3) [Has](#has);
+4) [Remove](#remove);
+5) [Clear](#clear).
 
 #### Get
 ```js
@@ -52,19 +59,14 @@ const data = await repository.set('key');
 await repository.set('key', 'data');
 ```
 
-#### Get all
-```js
-const data = await repository.getAll();
-```
-
 #### Has
 ```js
-const has = await repository.has(1);
+const has = await repository.has('key');
 ```
 
 #### Remove
 ```js
-await repository.remove(1);
+await repository.remove('key');
 ```
 
 #### Clear

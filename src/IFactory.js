@@ -10,10 +10,10 @@
  * @typedef {IRepositoryFactoryProperties} IRepositoryFactoryParams
  * 
  * @typedef {object} IRepositoryFactoryProperties
- * @property {RepositoryConstructable} Repository
- * @property {KeyedRepositoryConstructable} Keyed
- * @property {ModeledRepositoryConstructable} Modeled
- * @property {ObjectedRepositoryConstructable} Objected
+ * @property {RepositoryConstructable=} Repository
+ * @property {KeyedRepositoryConstructable=} Keyed
+ * @property {ModeledRepositoryConstructable=} Modeled
+ * @property {ObjectedRepositoryConstructable=} Objected
  */
 
 /**

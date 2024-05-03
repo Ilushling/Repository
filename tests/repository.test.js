@@ -3,7 +3,6 @@ import { describe, it } from 'node:test';
 
 import RepositoryFactory from '../src/Factory.js';
 
-import Repository from '../src/Repository.js';
 import KeyedRepository from '../src/KeyedRepository.js';
 import ModeledRepository from '../src/ModeledRepository.js';
 import ObjectedRepository from '../src/ObjectedRepository.js';
@@ -15,7 +14,6 @@ import ObjectedRepository from '../src/ObjectedRepository.js';
  */
 
 const repositoryFactory = new RepositoryFactory({
-  Repository,
   Keyed: KeyedRepository,
   Modeled: ModeledRepository,
   Objected: ObjectedRepository

@@ -9,7 +9,7 @@ export default {
 
   KeyedRepository,
   ModeledRepository,
-  ObjectedRepository,
+  ObjectedRepository
 };
 
 /**

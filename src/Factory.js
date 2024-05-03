@@ -35,21 +35,53 @@ export default class RepositoryFactory {
 
   /** @type {IRepositoryFactory['create']} */
   create(repository) {
-    return new this.#Repository({ repository });
+    const Repository = this.#Repository;
+
+    if (Repository == null) {
+      throw Object.assign(new Error('Repository must be injected in constructor'), {
+        name: 'InvalidRepositoryError'
+      });
+    }
+
+    return new Repository({ repository });
   }
 
   /** @type {IRepositoryFactory['createKeyed']} */
   createKeyed(repository, key) {
-    return new this.#Keyed({ repository, key });
+    const Keyed = this.#Keyed;
+
+    if (Keyed == null) {
+      throw Object.assign(new Error('Keyed must be injected in constructor'), {
+        name: 'InvalidKeyedError'
+      });
+    }
+
+    return new Keyed({ repository, key });
   }
 
   /** @type {IRepositoryFactory['createModeled']} */
   createModeled(repository, modelFactory) {
-    return new this.#Modeled({ repository, modelFactory });
+    const Modeled = this.#Modeled;
+
+    if (Modeled == null) {
+      throw Object.assign(new Error('Modeled must be injected in constructor'), {
+        name: 'InvalidModeledError'
+      });
+    }
+
+    return new Modeled({ repository, modelFactory });
   }
 
   /** @type {IRepositoryFactory['createObjected']} */
   createObjected(object) {
-    return new this.#Objected({ object });
+    const Objected = this.#Objected;
+
+    if (Objected == null) {
+      throw Object.assign(new Error('Objected must be injected in constructor'), {
+        name: 'InvalidObjectedError'
+      });
+    }
+
+    return new Objected({ object });
   }
 }
