@@ -4,7 +4,7 @@ import KeyedRepository from './src/KeyedRepository.js';
 import ModeledRepository from './src/ModeledRepository.js';
 import ObjectedRepository from './src/ObjectedRepository.js';
 
-export default {
+export {
   RepositoryFactory,
 
   KeyedRepository,
