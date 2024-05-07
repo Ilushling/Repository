@@ -7,12 +7,6 @@ import KeyedRepository from '../src/KeyedRepository.js';
 import ModeledRepository from '../src/ModeledRepository.js';
 import ObjectedRepository from '../src/ObjectedRepository.js';
 
-/**
- * @template {unknown} T
- * 
- * @typedef {import('../src/IObjectedRepository.js').ObjectedRepositoryParams<T>} ObjectedRepositoryParams
- */
-
 const repositoryFactory = new RepositoryFactory({
   Keyed: KeyedRepository,
   Modeled: ModeledRepository,
@@ -20,11 +14,9 @@ const repositoryFactory = new RepositoryFactory({
 });
 
 /**
- * @template {unknown} T
- * 
- * @param {ObjectedRepositoryParams<T>} params
+ * @param {Record<PropertyKey, unknown>} object
  */
-function createRepository({ object }) {
+function createRepository(object) {
   return repositoryFactory.createObjected(object);
 }
 
@@ -34,7 +26,7 @@ describe('Repository', () => {
       1: 2
     };
 
-    const repository = createRepository({ object });
+    const repository = createRepository(object);
 
     const data = await repository.get(1);
 
@@ -45,7 +37,7 @@ describe('Repository', () => {
     /** @type {Record<PropertyKey, unknown>} */
     const object = {};
 
-    const repository = createRepository({ object });
+    const repository = createRepository(object);
 
     await repository.set(1, 2);
     await repository.set('a', 'b');
@@ -61,7 +53,7 @@ describe('Repository', () => {
       1: 2
     };
 
-    const repository = createRepository({ object });
+    const repository = createRepository(object);
 
     const has = await repository.has(1);
 
@@ -73,7 +65,7 @@ describe('Repository', () => {
       1: 2
     };
 
-    const repository = createRepository({ object });
+    const repository = createRepository(object);
 
     await repository.remove(1);
 
@@ -84,7 +76,7 @@ describe('Repository', () => {
     /** @type {Record<PropertyKey, unknown>} */
     const object = {};
 
-    const repository = createRepository({ object });
+    const repository = createRepository(object);
 
     await repository.set(1, 2);
     await repository.set('a', 'b');

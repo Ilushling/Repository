@@ -25,14 +25,16 @@ Repository.
 import {
   RepositoryFactory,
 
-  KeyedRepository,
+  ArrayedRepository,
   ModeledRepository,
+  KeyedRepository,
   ObjectedRepository
 } from 'reposy';
 
 const repositoryFactory = new RepositoryFactory({
-  Keyed: KeyedRepository,
+  Arrayed: ArrayedRepository,
   Modeled: ModeledRepository,
+  Keyed: KeyedRepository,
   Objected: ObjectedRepository
 });
 

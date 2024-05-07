@@ -1,5 +1,9 @@
 /**
-   * @template {unknown} T
+ * @typedef {new <T>(params: KeyedRepositoryParams<T>) => IKeyedRepository<T>} KeyedRepositoryConstructable
+ */
+
+/**
+ * @template {unknown} T
  * 
  * @implements {IKeyedRepository<T>}
  */
@@ -7,26 +11,42 @@ export default class KeyedRepository {
   /**
    * @template {unknown} T
    * 
-   * @typedef {import('./IKeyedRepository.js').IKeyedRepository<T>} IKeyedRepository
+   * @typedef {import('./interfaces/IKeyedRepository.js').IKeyedRepository<T>} IKeyedRepository
    */
 
   /**
-   * @typedef {import('./IKeyedRepository.js').KeyedRepositoryParams<T>} KeyedRepositoryParams
+   * @template {unknown} T
+   * 
+   * @typedef {KeyedRepositoryProperties<T>} KeyedRepositoryParams
    */
 
   /**
-   * @typedef {import('./IKeyedRepository.js').KeyedRepositoryProperties<T>} KeyedRepositoryProperties
+   * @template {unknown} T
+   * 
+   * @typedef {object} KeyedRepositoryProperties
+   * @property {IRepository<T>} repository
+   * @property {Key} key
+   */
+
+  /**
+   * @template {unknown} T
+   * 
+   * @typedef {import('./interfaces/IRepository.js').IRepository<T>} IRepository
+   */
+
+  /**
+   * @typedef {import('./interfaces/IRepository.js').Key} Key
    */
 
   // Dependencies
-  /** @type {KeyedRepositoryProperties['repository']} */
+  /** @type {KeyedRepositoryProperties<T>['repository']} */
   #repository;
 
   // Configs
-  /** @type {KeyedRepositoryProperties['key']} */
+  /** @type {KeyedRepositoryProperties<T>['key']} */
   #key;
 
-  /** @param {KeyedRepositoryParams} params */
+  /** @param {KeyedRepositoryParams<T>} params */
   constructor({
     repository,
 
@@ -58,7 +78,7 @@ export default class KeyedRepository {
     const repository = this.#repository;
     const key = this.#key;
 
-    repository.set(key, data);
+    await repository.set(key, data);
   }
 
   /** @type {IKeyedRepository<T>['remove']} */

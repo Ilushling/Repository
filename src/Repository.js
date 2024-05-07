@@ -1,51 +1,62 @@
 /**
+ * @typedef {new <T>(params: RepositoryParams<T>) => IRepository<T>} RepositoryConstructable
+ */
+
+/**
  * @template {unknown} T
  * 
- * @implements {IRepository}
+ * @implements {IRepository<T>}
  */
 export default class Repository {
   /**
-   * @typedef {import('./IRepository.js').IRepository<T>} IRepository
+   * @template {unknown} T
+   * 
+   * @typedef {import('./interfaces/IRepository.js').IRepository<T>} IRepository
    */
 
   /**
-   * @typedef {import('./IRepository.js').RepositoryParams<T>} RepositoryParams
+   * @template {unknown} T
+   * 
+   * @typedef {RepositoryProperties<T>} RepositoryParams
    */
 
   /**
-   * @typedef {import('./IRepository.js').RepositoryProperties<T>} RepositoryProperties
+   * @template {unknown} T
+   * 
+   * @typedef {object} RepositoryProperties
+   * @property {IRepository<T>} repository
    */
 
-  /** @type {RepositoryProperties['repository']} */
+  /** @type {RepositoryProperties<T>['repository']} */
   #repository;
 
-  /** @param {RepositoryParams} params */
+  /** @param {RepositoryParams<T>} params */
   constructor({ repository }) {
     this.#repository = repository;
   }
 
-  /** @type {IRepository['get']} */
+  /** @type {IRepository<T>['get']} */
   async get(key) {
     const repository = this.#repository;
 
     return repository.get(key);
   }
 
-  /** @type {IRepository['has']} */
+  /** @type {IRepository<T>['has']} */
   async has(key) {
     const repository = this.#repository;
 
     return repository.has(key);
   }
 
-  /** @type {IRepository['set']} */
+  /** @type {IRepository<T>['set']} */
   async set(key, data) {
     const repository = this.#repository;
 
-    repository.set(key, data);
+    await repository.set(key, data);
   }
 
-  /** @type {IRepository['remove']} */
+  /** @type {IRepository<T>['remove']} */
   async remove(key) {
     const repository = this.#repository;
 

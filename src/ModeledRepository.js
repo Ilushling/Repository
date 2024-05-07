@@ -1,67 +1,95 @@
 /**
+ * @typedef {new <T, P>(params: ModeledRepositoryParams<T, P>) => IModeledRepository<T>} ModeledRepositoryConstructable
+ */
+
+/**
  * @template {unknown} T
  * @template {unknown} P
  * 
- * @implements {IModeledRepository}
+ * @implements {IModeledRepository<T>}
  */
 export default class ModeledRepository {
   /**
-   * @typedef {import('./IModeledRepository.js').IModeledRepository<T>} IModeledRepository
+   * @template {unknown} T
+   * 
+   * @typedef {import('./interfaces/IModeledRepository.js').IModeledRepository<T>} IModeledRepository
    */
 
   /**
-   * @typedef {import('./IModeledRepository.js').ModeledRepositoryParams<T, P>} ModeledRepositoryParams
+   * @template {unknown} T
+   * @template {unknown} P
+   * 
+   * @typedef {ModeledRepositoryProperties<T, P>} ModeledRepositoryParams
    */
 
   /**
-   * @typedef {import('./IModeledRepository.js').ModeledRepositoryProperties<T, P>} ModeledRepositoryProperties
+   * @template {unknown} T
+   * @template {unknown} P
+   * 
+   * @typedef {object} ModeledRepositoryProperties
+   * @property {IRepository<P>} repository
+   * @property {ModelFactory<T, P>} modelFactory
    */
 
   /**
-   * @typedef {import('./IModeledRepository.js').Model<P>} Model
+   * @template {unknown} T
+   * 
+   * @typedef {import('./interfaces/IRepository.js').IRepository<T>} IRepository
    */
 
-  /** @type {ModeledRepositoryProperties['repository']} */
+  /**
+   * @template {unknown} T
+   * @template {unknown} P
+   * 
+   * @typedef {import('./interfaces/IModeledRepository.js').ModelFactory<T, P>} ModelFactory
+   */
+
+  /**
+   * @typedef {object} Model
+   * @property {() => P} getProperties
+   */
+
+  /** @type {ModeledRepositoryProperties<T, P>['repository']} */
   #repository;
 
-  /** @type {ModeledRepositoryProperties['modelFactory']} */
+  /** @type {ModeledRepositoryProperties<T, P>['modelFactory']} */
   #modelFactory;
 
-  /** @param {ModeledRepositoryParams} params */
+  /** @param {ModeledRepositoryParams<T, P>} params */
   constructor({ repository, modelFactory }) {
     this.#repository = repository;
     this.#modelFactory = modelFactory;
   }
 
-  /** @type {IModeledRepository['get']} */
+  /** @type {IModeledRepository<T>['get']} */
   async get(key) {
     const repository = this.#repository;
 
-    const data = await repository.get(key);
-    if (data == null) {
+    const properties = await repository.get(key);
+    if (properties == null) {
       return;
     }
 
-    return this.#modelFactory.create(data);
+    return this.#modelFactory(properties);
   }
 
-  /** @type {IModeledRepository['has']} */
+  /** @type {IModeledRepository<T>['has']} */
   async has(key) {
     const repository = this.#repository;
 
     return repository.has(key);
   }
 
-  /** @type {IModeledRepository['set']} */
+  /** @type {IModeledRepository<T>['set']} */
   async set(key, model) {
     const repository = this.#repository;
 
     const data = this.#getData(model);
 
-    repository.set(key, data);
+    await repository.set(key, data);
   }
 
-  /** @type {IModeledRepository['remove']} */
+  /** @type {IModeledRepository<T>['remove']} */
   async remove(key) {
     const repository = this.#repository;
 

@@ -10,22 +10,5 @@
  */
 
 /**
- * @typedef {new <T>(params: RepositoryParams<T>) => IRepository<T>} RepositoryConstructable
- */
-
-/**
- * @template {unknown} T
- * 
- * @typedef {RepositoryProperties<T>} RepositoryParams
- */
-
-/**
- * @template {unknown} T
- * 
- * @typedef {object} RepositoryProperties
- * @property {IRepository<T>} repository
- */
-
-/**
  * @typedef {string | number} Key
  */
