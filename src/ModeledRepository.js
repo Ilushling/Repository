@@ -1,52 +1,48 @@
 /**
- * @typedef {new <T, P>(params: ModeledRepositoryParams<T, P>) => IModeledRepository<T>} ModeledRepositoryConstructable
+ * @import {
+ *  IModeledRepository,
+ *  ModelFactory,
+ *  Model
+ * } from './interfaces/IModeledRepository.js'
+ * 
+ * @import { IRepository } from './interfaces/IRepository.js'
  */
 
 /**
- * @template {unknown} T
+ * @typedef {new <T extends Model<P>, P extends unknown>(
+ *  params: ModeledRepositoryParams<T, P>
+ * ) => IModeledRepository<T>
+ * } ModeledRepositoryConstructable
+ */
+
+/**
+ * @template {Model<P>} T
  * @template {unknown} P
  * 
  * @implements {IModeledRepository<T>}
  */
 export default class ModeledRepository {
   /**
-   * @template {unknown} T
-   * 
-   * @typedef {import('./interfaces/IModeledRepository.js').IModeledRepository<T>} IModeledRepository
-   */
-
-  /**
-   * @template {unknown} T
+   * @template {Model<P>} T
    * @template {unknown} P
    * 
    * @typedef {ModeledRepositoryProperties<T, P>} ModeledRepositoryParams
    */
 
   /**
-   * @template {unknown} T
+   * @template {Model<P>} T
    * @template {unknown} P
    * 
-   * @typedef {object} ModeledRepositoryProperties
+   * @typedef {ModeledRepositoryDependencies<T, P>} ModeledRepositoryProperties
+   */
+
+  /**
+   * @template {Model<P>} T
+   * @template {unknown} P
+   * 
+   * @typedef {object} ModeledRepositoryDependencies
    * @property {IRepository<P>} repository
    * @property {ModelFactory<T, P>} modelFactory
-   */
-
-  /**
-   * @template {unknown} T
-   * 
-   * @typedef {import('./interfaces/IRepository.js').IRepository<T>} IRepository
-   */
-
-  /**
-   * @template {unknown} T
-   * @template {unknown} P
-   * 
-   * @typedef {import('./interfaces/IModeledRepository.js').ModelFactory<T, P>} ModelFactory
-   */
-
-  /**
-   * @typedef {object} Model
-   * @property {() => P} getProperties
    */
 
   /** @type {ModeledRepositoryProperties<T, P>['repository']} */
@@ -61,6 +57,7 @@ export default class ModeledRepository {
     this.#modelFactory = modelFactory;
   }
 
+  //#region Interfaces
   /** @type {IModeledRepository<T>['get']} */
   async get(key) {
     const repository = this.#repository;
@@ -96,12 +93,15 @@ export default class ModeledRepository {
     await repository.remove(key);
   }
 
+  /** @type {IModeledRepository<T>['clear']} */
   async clear() {
     const repository = this.#repository;
 
     await repository.clear();
   }
+  //#endregion
 
+  //#region Logic
   /**
    * @param {unknown} data
    * @returns {P}
@@ -118,7 +118,7 @@ export default class ModeledRepository {
 
   /**
    * @param {unknown} data
-   * @returns {data is Model}
+   * @returns {data is T}
    */
   #isModel(data) {
     return data != null
@@ -126,4 +126,5 @@ export default class ModeledRepository {
       && 'getProperties' in data
       && typeof data.getProperties === 'function';
   }
+  //#endregion
 }

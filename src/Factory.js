@@ -1,58 +1,57 @@
 /**
+ * @import { IRepositoryFactory } from './interfaces/IFactory.js'
+ * 
+ * @import { RepositoryConstructable } from './Repository.js'
+ * @import { ArrayedRepositoryConstructable } from './ArrayedRepository.js'
+ * @import { ModeledRepositoryConstructable } from './ModeledRepository.js'
+ * @import { KeyedRepositoryConstructable } from './KeyedRepository.js'
+ * @import { ObjectedRepositoryConstructable } from './ObjectedRepository.js'
+ */
+
+/**
  * @implements {IRepositoryFactory}
  */
 export default class RepositoryFactory {
   /**
-   * @typedef {import('./interfaces/IFactory.js').IRepositoryFactory} IRepositoryFactory
-   */
-
-  /**
-   * @typedef {IRepositoryFactoryProperties} IRepositoryFactoryParams
+   * @typedef {RepositoryFactoryDependencies} RepositoryFactoryParams
+   * @typedef {RepositoryFactoryDependencies} RepositoryFactoryProperties
    * 
-   * @typedef {object} IRepositoryFactoryProperties
+   * @typedef {object} RepositoryFactoryDependencies
    * @property {RepositoryConstructable=} Repository
-   * @property {ArrayedRepositoryConstructable=} Arrayed
-   * @property {ModeledRepositoryConstructable=} Modeled
-   * @property {KeyedRepositoryConstructable=} Keyed
-   * @property {ObjectedRepositoryConstructable=} Objected
+   * @property {ArrayedRepositoryConstructable=} ArrayedRepository
+   * @property {ModeledRepositoryConstructable=} ModeledRepository
+   * @property {KeyedRepositoryConstructable=} KeyedRepository
+   * @property {ObjectedRepositoryConstructable=} ObjectedRepository
    */
 
-  /**
-   * @typedef {import('./Repository.js').RepositoryConstructable} RepositoryConstructable
-   * @typedef {import('./ArrayedRepository.js').ArrayedRepositoryConstructable} ArrayedRepositoryConstructable
-   * @typedef {import('./ModeledRepository.js').ModeledRepositoryConstructable} ModeledRepositoryConstructable
-   * @typedef {import('./KeyedRepository.js').KeyedRepositoryConstructable} KeyedRepositoryConstructable
-   * @typedef {import('./ObjectedRepository.js').ObjectedRepositoryConstructable} ObjectedRepositoryConstructable
-   */
-
-  /** @type {IRepositoryFactoryProperties['Repository']} */
+  /** @type {RepositoryFactoryProperties['Repository']} */
   #Repository;
 
-  /** @type {IRepositoryFactoryProperties['Arrayed']} */
-  #Arrayed;
+  /** @type {RepositoryFactoryProperties['ArrayedRepository']} */
+  #ArrayedRepository;
 
-  /** @type {IRepositoryFactoryProperties['Modeled']} */
-  #Modeled;
+  /** @type {RepositoryFactoryProperties['ModeledRepository']} */
+  #ModeledRepository;
 
-  /** @type {IRepositoryFactoryProperties['Keyed']} */
-  #Keyed;
+  /** @type {RepositoryFactoryProperties['KeyedRepository']} */
+  #KeyedRepository;
 
-  /** @type {IRepositoryFactoryProperties['Objected']} */
-  #Objected;
+  /** @type {RepositoryFactoryProperties['ObjectedRepository']} */
+  #ObjectedRepository;
 
-  /** @param {IRepositoryFactoryParams} params */
+  /** @param {RepositoryFactoryParams} params */
   constructor({
     Repository,
-    Arrayed,
-    Modeled,
-    Keyed,
-    Objected
+    ArrayedRepository,
+    ModeledRepository,
+    KeyedRepository,
+    ObjectedRepository
   }) {
     this.#Repository = Repository;
-    this.#Arrayed = Arrayed;
-    this.#Modeled = Modeled;
-    this.#Keyed = Keyed;
-    this.#Objected = Objected;
+    this.#ArrayedRepository = ArrayedRepository;
+    this.#ModeledRepository = ModeledRepository;
+    this.#KeyedRepository = KeyedRepository;
+    this.#ObjectedRepository = ObjectedRepository;
   }
 
   /** @type {IRepositoryFactory['create']} */
@@ -70,53 +69,53 @@ export default class RepositoryFactory {
 
   /** @type {IRepositoryFactory['createArrayed']} */
   createArrayed(array) {
-    const Arrayed = this.#Arrayed;
+    const ArrayedRepository = this.#ArrayedRepository;
 
-    if (Arrayed == null) {
+    if (ArrayedRepository == null) {
       throw Object.assign(new Error('Arrayed must be injected in constructor'), {
         name: 'InvalidArrayedError'
       });
     }
 
-    return new Arrayed({ array });
+    return new ArrayedRepository({ array });
   }
 
   /** @type {IRepositoryFactory['createModeled']} */
   createModeled(repository, modelFactory) {
-    const Modeled = this.#Modeled;
+    const ModeledRepository = this.#ModeledRepository;
 
-    if (Modeled == null) {
+    if (ModeledRepository == null) {
       throw Object.assign(new Error('Modeled must be injected in constructor'), {
         name: 'InvalidModeledError'
       });
     }
 
-    return new Modeled({ repository, modelFactory });
+    return new ModeledRepository({ repository, modelFactory });
   }
 
   /** @type {IRepositoryFactory['createKeyed']} */
   createKeyed(repository, key) {
-    const Keyed = this.#Keyed;
+    const KeyedRepository = this.#KeyedRepository;
 
-    if (Keyed == null) {
+    if (KeyedRepository == null) {
       throw Object.assign(new Error('Keyed must be injected in constructor'), {
         name: 'InvalidKeyedError'
       });
     }
 
-    return new Keyed({ repository, key });
+    return new KeyedRepository({ repository, key });
   }
 
   /** @type {IRepositoryFactory['createObjected']} */
   createObjected(object) {
-    const Objected = this.#Objected;
+    const ObjectedRepository = this.#ObjectedRepository;
 
-    if (Objected == null) {
+    if (ObjectedRepository == null) {
       throw Object.assign(new Error('Objected must be injected in constructor'), {
         name: 'InvalidObjectedError'
       });
     }
 
-    return new Objected({ object });
+    return new ObjectedRepository({ object });
   }
 }

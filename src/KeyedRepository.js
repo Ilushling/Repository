@@ -1,4 +1,10 @@
 /**
+ * @import { IKeyedRepository } from './interfaces/IKeyedRepository.js'
+ * 
+ * @import { IRepository, Key } from './interfaces/IRepository.js'
+ */
+
+/**
  * @typedef {new <T>(params: KeyedRepositoryParams<T>) => IKeyedRepository<T>} KeyedRepositoryConstructable
  */
 
@@ -11,31 +17,27 @@ export default class KeyedRepository {
   /**
    * @template {unknown} T
    * 
-   * @typedef {import('./interfaces/IKeyedRepository.js').IKeyedRepository<T>} IKeyedRepository
+   * @typedef {KeyedRepositoryDependencies<T>
+   *  & KeyedRepositoryConfigs} KeyedRepositoryParams
    */
 
   /**
    * @template {unknown} T
    * 
-   * @typedef {KeyedRepositoryProperties<T>} KeyedRepositoryParams
+   * @typedef {KeyedRepositoryDependencies<T>
+   *  & KeyedRepositoryConfigs} KeyedRepositoryProperties
    */
 
   /**
    * @template {unknown} T
    * 
-   * @typedef {object} KeyedRepositoryProperties
+   * @typedef {object} KeyedRepositoryDependencies
    * @property {IRepository<T>} repository
+   */
+
+  /**
+   * @typedef {object} KeyedRepositoryConfigs
    * @property {Key} key
-   */
-
-  /**
-   * @template {unknown} T
-   * 
-   * @typedef {import('./interfaces/IRepository.js').IRepository<T>} IRepository
-   */
-
-  /**
-   * @typedef {import('./interfaces/IRepository.js').Key} Key
    */
 
   // Dependencies
@@ -89,6 +91,7 @@ export default class KeyedRepository {
     await repository.remove(key);
   }
 
+  /** @type {IKeyedRepository<T>['clear']} */
   async clear() {
     const repository = this.#repository;
 

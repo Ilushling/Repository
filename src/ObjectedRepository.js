@@ -1,4 +1,8 @@
 /**
+ * @import { IRepository, Key } from './interfaces/IRepository.js'
+ */
+
+/**
  * @typedef {new <T>(params: ObjectedRepositoryParams<T>) => IRepository<T>} ObjectedRepositoryConstructable
  */
 
@@ -11,20 +15,20 @@ export default class ObjectedRepository {
   /**
    * @template {unknown} T
    * 
-   * @typedef {import('./interfaces/IRepository.js').IRepository<T>} IRepository
+   * @typedef {ObjectedRepositoryDependencies<T>} ObjectedRepositoryParams
    */
 
   /**
    * @template {unknown} T
    * 
-   * @typedef {ObjectedRepositoryProperties<T>} ObjectedRepositoryParams
+   * @typedef {ObjectedRepositoryDependencies<T>} ObjectedRepositoryProperties
    */
 
   /**
    * @template {unknown} T
    * 
-   * @typedef {object} ObjectedRepositoryProperties
-   * @property {Record<PropertyKey, T | undefined>} object
+   * @typedef {object} ObjectedRepositoryDependencies
+   * @property {Record<Key, T | undefined>} object
    */
 
   /** @type {ObjectedRepositoryProperties<T>['object']} */
@@ -63,6 +67,7 @@ export default class ObjectedRepository {
     delete object[key];
   }
 
+  /** @type {IRepository<T>['clear']} */
   async clear() {
     const object = this.#object;
 

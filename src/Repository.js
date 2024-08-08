@@ -1,4 +1,8 @@
 /**
+ * @import { IRepository } from './interfaces/IRepository.js'
+ */
+
+/**
  * @typedef {new <T>(params: RepositoryParams<T>) => IRepository<T>} RepositoryConstructable
  */
 
@@ -11,19 +15,19 @@ export default class Repository {
   /**
    * @template {unknown} T
    * 
-   * @typedef {import('./interfaces/IRepository.js').IRepository<T>} IRepository
+   * @typedef {RepositoryDependencies<T>} RepositoryParams
    */
 
   /**
    * @template {unknown} T
    * 
-   * @typedef {RepositoryProperties<T>} RepositoryParams
+   * @typedef {RepositoryDependencies<T>} RepositoryProperties
    */
 
   /**
    * @template {unknown} T
    * 
-   * @typedef {object} RepositoryProperties
+   * @typedef {object} RepositoryDependencies
    * @property {IRepository<T>} repository
    */
 
@@ -63,6 +67,7 @@ export default class Repository {
     await repository.remove(key);
   }
 
+  /** @type {IRepository<T>['clear']} */
   async clear() {
     const repository = this.#repository;
 

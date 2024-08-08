@@ -1,43 +1,34 @@
 /**
  * @typedef {object} IRepositoryFactory
- * @property {<T>(repository: IRepository<T>) => IRepository<T>} create
- * @property {<T>(array: T[]) => IArrayedRepository<T>} createArrayed
- * @property {<T, P>(repository: IRepository<P>, modelFactory: ModelFactory<T, P>) => IModeledRepository<T>} createModeled
- * @property {<T>(repository: IRepository<T>, key: Key) => IKeyedRepository<T>} createKeyed
- * @property {<T>(object: Record<PropertyKey, T | undefined>) => IRepository<T>} createObjected
+ * @property {<T extends unknown>(
+ *  repository: IRepository<T>
+ * ) => IRepository<T>
+ * } create
+ * @property {<T extends unknown>(
+ *  array: T[]
+ * ) => IArrayedRepository<T>
+ * } createArrayed
+ * @property {<T extends Model<P>, P extends unknown>(
+ *  repository: IRepository<P>,
+ *  modelFactory: ModelFactory<T, P>
+ * ) => IModeledRepository<T>
+ * } createModeled
+ * @property {<T extends unknown>(
+ *  repository: IRepository<T>,
+ *  key: Key
+ * ) => IKeyedRepository<T>
+ * } createKeyed
+ * @property {<T extends unknown>(
+ *  object: Record<Key, T | undefined>
+ * ) => IRepository<T>
+ * } createObjected
  */
 
 /**
- * @template {unknown} T
+ * @import { IRepository, Key } from './IRepository.js'
  * 
- * @typedef {import('./IRepository.js').IRepository<T>} IRepository
- */
-
-/**
- * @template {unknown} T
- * 
- * @typedef {import('./IArrayedRepository.js').IArrayedRepository<T>} IArrayedRepository
- */
-
-/**
- * @template {unknown} T
- * 
- * @typedef {import('./IModeledRepository.js').IModeledRepository<T>} IModeledRepository
- */
-
-/**
- * @template {unknown} T
- * 
- * @typedef {import('./IKeyedRepository.js').IKeyedRepository<T>} IKeyedRepository
- */
-
-/**
- * @typedef {import('./IRepository.js').Key} Key
- */
-
-/**
- * @template {unknown} T
- * @template {unknown} P
- * 
- * @typedef {import('./IModeledRepository.js').ModelFactory<T, P>} ModelFactory
+ * @import { IArrayedRepository } from './IArrayedRepository.js'
+ * @import { IModeledRepository, Model } from './IModeledRepository.js'
+ * @import { IKeyedRepository } from './IKeyedRepository.js'
+ * @import { ModelFactory } from './IModeledRepository.js'
  */

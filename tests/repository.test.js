@@ -8,9 +8,9 @@ import ModeledRepository from '../src/ModeledRepository.js';
 import ObjectedRepository from '../src/ObjectedRepository.js';
 
 const repositoryFactory = new RepositoryFactory({
-  Keyed: KeyedRepository,
-  Modeled: ModeledRepository,
-  Objected: ObjectedRepository
+  KeyedRepository,
+  ModeledRepository,
+  ObjectedRepository
 });
 
 /**

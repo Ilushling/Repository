@@ -1,4 +1,8 @@
 /**
+ * @import { IArrayedRepository } from './interfaces/IArrayedRepository.js'
+ */
+
+/**
  * @typedef {new <T>(params: ArrayedRepositoryParams<T>) => IArrayedRepository<T>} ArrayedRepositoryConstructable
  */
 
@@ -11,19 +15,19 @@ export default class ArrayedRepository {
   /**
    * @template {unknown} T
    * 
-   * @typedef {import('./interfaces/IArrayedRepository.js').IArrayedRepository<T>} IArrayedRepository
+   * @typedef {ArrayedRepositoryStates<T>} ArrayedRepositoryParams
    */
 
   /**
    * @template {unknown} T
    * 
-   * @typedef {ArrayedRepositoryProperties<T>} ArrayedRepositoryParams
+   * @typedef {ArrayedRepositoryStates<T>} ArrayedRepositoryProperties
    */
 
   /**
    * @template {unknown} T
    * 
-   * @typedef {object} ArrayedRepositoryProperties
+   * @typedef {object} ArrayedRepositoryStates
    * @property {T[]} array
    */
 
@@ -70,6 +74,7 @@ export default class ArrayedRepository {
     array.splice(index, 1);
   }
 
+  /** @type {IArrayedRepository<T>['clear']} */
   async clear() {
     const array = this.#array;
 
